@@ -10,19 +10,5 @@
     },
     "enabledMcpjsonServers": [
         "playwright"
-    ],
-    "hooks": {
-        "PreToolUse": [
-            {
-                "matcher": "Bash",
-                "hooks": [
-                    {
-                        "type": "command",
-                        "shell": "bash",
-                        "command": "jq -r \".tool_input.command // empty\" | { read -r cmd; if echo \"$cmd\" | grep -qiE \"(^|[;&|]|[[:space:]])sudo([[:space:]]|$)|rm[[:space:]]+(-[a-zA-Z]*r[a-zA-Z]*f[a-zA-Z]*|-[a-zA-Z]*f[a-zA-Z]*r[a-zA-Z]*|--recursive[[:space:]]+.*--force|--force[[:space:]]+.*--recursive)\"; then jq -n --arg reason \"위험한 명령어가 감지되어 차단되었습니다: rm -rf, sudo 사용은 허용되지 않습니다.\" '{hookSpecificOutput:{hookEventName:\"PreToolUse\",permissionDecision:\"deny\",permissionDecisionReason:$reason}}'; else echo \"{}\"; fi; }"
-                    }
-                ]
-            }
-        ]
-    }
+    ]
 }

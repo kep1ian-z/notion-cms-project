@@ -31,7 +31,7 @@ Notion을 CMS로 활용해 별도 배포 과정 없이 글이 자동으로 반�
 
 **예상 소요 시간**: 2~3일
 
-- **Task 001: 라우팅 및 페이지 골격 구성** - 우선순위
+- **Task 001: 라우팅 및 페이지 골격 구성** ✅ - 완료
   - Next.js App Router 기준 라우트 생성: `/`(홈), `/posts/[slug]`(글 상세), `/category/[category]`(카테고리)
   - 각 페이지의 빈 껍데기(placeholder) 컴포넌트 생성
   - 공통 레이아웃(`app/layout.tsx`)에 헤더/푸터 골격 구현

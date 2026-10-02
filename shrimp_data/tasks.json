@@ -5,10 +5,10 @@
       "name": "Task 001: 라우팅 및 페이지 골격 구성",
       "description": "Next.js App Router 기준 3개 라우트(/, /posts/[slug], /category/[category])를 모두 접속 가능하게 만든다. app/page.tsx는 이미 존재하므로 app/posts/[slug]/page.tsx, app/category/[category]/page.tsx에 빈 placeholder 컴포넌트를 생성한다. 기존 app/layout.tsx의 공통 헤더/푸터 구조를 그대로 상속받는다.",
       "notes": "완료 기준(ROADMAP): 3개 라우트 모두 접속 가능하고 페이지 간 이동이 정상 동작.",
-      "status": "pending",
+      "status": "completed",
       "dependencies": [],
       "createdAt": "2026-09-17T15:59:53.159Z",
-      "updatedAt": "2026-09-17T15:59:53.159Z",
+      "updatedAt": "2026-09-24T15:36:01.641Z",
       "relatedFiles": [
         {
           "path": "app/posts/[slug]/page.tsx",
@@ -33,7 +33,9 @@
       ],
       "implementationGuide": "1) app/posts/[slug]/page.tsx 생성: params.slug를 받아 임시 텍스트만 렌더링하는 서버 컴포넌트. 2) app/category/[category]/page.tsx 생성: params.category를 받아 임시 텍스트만 렌더링. 3) 두 파일 모두 app/page.tsx와 동일하게 4스페이스 들여쓰기, 한국어 카피 사용. 4) components/site-header.tsx의 navItems는 이 단계에서 수정하지 않음(Task 006/009에서 확정).",
       "verificationCriteria": "npm run dev로 /, /posts/test, /category/test 접속 시 각각 200 응답과 placeholder 텍스트가 표시되는지 확인.",
-      "analysisResult": "Notion CMS 개인 개발 블로그. docs/ROADMAP.md의 Structure-First 접근법(Phase1 골격 → Phase2 더미UI → Phase3 실연동 → Phase4 부가기능 → Phase5 최적화/배포)과 Task 001~013 순서를 그대로 승계한다. shrimp-rules.md 컨벤션 준수: app/*, components/*(ui 제외)는 4스페이스 들여쓰기·components/ui/*는 2스페이스 유지, @base-ui/react는 asChild 대신 render prop 패턴 사용, 신규 shadcn 컴포넌트는 /add-component 커맨드로만 추가, import는 @/* 별칭 사용, Notion 호출은 lib/notion.ts 단일 진입점, 글 목록/상세/카테고리 어디서도 Status≠발행됨 글 노출 금지, AGENTS.md 자동생성 블록 보존, .env.local 커밋 금지. Phase3(Task007~009-1)은 Playwright MCP E2E 테스트 필수. Task003(Notion 워크스페이스 설정)과 Task013(Vercel 배포)은 외부 서비스/계정 조작이 필요해 사용자 확인 후 진행. 각 Task 완료 시 docs/ROADMAP.md 상태 표기(✅ - 완료)를 갱신한다."
+      "analysisResult": "Notion CMS 개인 개발 블로그. docs/ROADMAP.md의 Structure-First 접근법(Phase1 골격 → Phase2 더미UI → Phase3 실연동 → Phase4 부가기능 → Phase5 최적화/배포)과 Task 001~013 순서를 그대로 승계한다. shrimp-rules.md 컨벤션 준수: app/*, components/*(ui 제외)는 4스페이스 들여쓰기·components/ui/*는 2스페이스 유지, @base-ui/react는 asChild 대신 render prop 패턴 사용, 신규 shadcn 컴포넌트는 /add-component 커맨드로만 추가, import는 @/* 별칭 사용, Notion 호출은 lib/notion.ts 단일 진입점, 글 목록/상세/카테고리 어디서도 Status≠발행됨 글 노출 금지, AGENTS.md 자동생성 블록 보존, .env.local 커밋 금지. Phase3(Task007~009-1)은 Playwright MCP E2E 테스트 필수. Task003(Notion 워크스페이스 설정)과 Task013(Vercel 배포)은 외부 서비스/계정 조작이 필요해 사용자 확인 후 진행. 각 Task 완료 시 docs/ROADMAP.md 상태 표기(✅ - 완료)를 갱신한다.",
+      "summary": "app/posts/[slug]/page.tsx와 app/category/[category]/page.tsx placeholder를 4스페이스 들여쓰기와 한국어 카피로 생성했다. Next 16 규칙에 맞춰 PageProps 타입과 await params를 사용했다. tsc 타입 검사를 통과했고, dev 서버에서 /, /posts/test, /category/test가 모두 200과 placeholder 텍스트를 반환했다. 헤더/푸터는 layout에서 상속되며 navItems는 수정하지 않았다. npx가 바꾼 package.json과 lock 파일은 원복했다.",
+      "completedAt": "2026-09-24T15:36:01.637Z"
     },
     {
       "id": "cb472194-4285-4650-91a9-32e868352e5b",
