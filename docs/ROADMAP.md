@@ -37,7 +37,7 @@ Notion을 CMS로 활용해 별도 배포 과정 없이 글이 자동으로 반�
   - 공통 레이아웃(`app/layout.tsx`)에 헤더/푸터 골격 구현
   - 완료 기준: 3개 라우트 모두 접속 가능하고 페이지 간 이동이 정상 동작
 
-- **Task 002: 타입 정의 및 환경 설정**
+- **Task 002: 타입 정의 및 환경 설정** ✅ - 완료
   - `@notionhq/client` 패키지 설치
   - `.env.local`에 `NOTION_API_KEY`, `NOTION_DATABASE_ID` 등 환경 변수 설정
   - `Post`, `Category`, `Tag` 등 TypeScript 타입/인터페이스 정의 (`lib/types.ts`)

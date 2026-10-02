@@ -42,14 +42,14 @@
       "name": "Task 002: 타입 정의 및 환경 설정",
       "description": "@notionhq/client 패키지를 설치하고 .env.local에 NOTION_API_KEY, NOTION_DATABASE_ID 플레이스홀더를 추가한다. lib/types.ts에 Post/Category/Tag 타입을 PRD 5번 표(Title/Category/Tags/Published/Status/Content)에 맞춰 정의한다.",
       "notes": "완료 기준(ROADMAP): 타입 파일이 존재하고 tsc/eslint가 에러 없이 통과. .env.local은 절대 커밋하지 않는다.",
-      "status": "pending",
+      "status": "completed",
       "dependencies": [
         {
           "taskId": "f5563ce8-f0a3-427e-8f36-558d38ac88ed"
         }
       ],
       "createdAt": "2026-09-17T15:59:53.159Z",
-      "updatedAt": "2026-09-17T15:59:53.159Z",
+      "updatedAt": "2026-10-02T08:21:24.292Z",
       "relatedFiles": [
         {
           "path": "lib/types.ts",
@@ -74,7 +74,9 @@
       ],
       "implementationGuide": "1) npm install @notionhq/client 실행(node_modules 최초 설치 포함, npm install 먼저 필요). 2) .env.local 생성, .gitignore에 이미 포함돼있는지 확인 후 커밋 대상에서 제외. 3) lib/types.ts에 Post, Category(string literal 또는 select 값), Tag 타입 정의, PRD 필드명↔영문 타입 필드 매핑 주석(한국어)으로 문서화.",
       "verificationCriteria": "npx tsc --noEmit, npm run lint 모두 에러 없이 통과.",
-      "analysisResult": "Notion CMS 개인 개발 블로그. docs/ROADMAP.md의 Structure-First 접근법(Phase1 골격 → Phase2 더미UI → Phase3 실연동 → Phase4 부가기능 → Phase5 최적화/배포)과 Task 001~013 순서를 그대로 승계한다. shrimp-rules.md 컨벤션 준수: app/*, components/*(ui 제외)는 4스페이스 들여쓰기·components/ui/*는 2스페이스 유지, @base-ui/react는 asChild 대신 render prop 패턴 사용, 신규 shadcn 컴포넌트는 /add-component 커맨드로만 추가, import는 @/* 별칭 사용, Notion 호출은 lib/notion.ts 단일 진입점, 글 목록/상세/카테고리 어디서도 Status≠발행됨 글 노출 금지, AGENTS.md 자동생성 블록 보존, .env.local 커밋 금지. Phase3(Task007~009-1)은 Playwright MCP E2E 테스트 필수. Task003(Notion 워크스페이스 설정)과 Task013(Vercel 배포)은 외부 서비스/계정 조작이 필요해 사용자 확인 후 진행. 각 Task 완료 시 docs/ROADMAP.md 상태 표기(✅ - 완료)를 갱신한다."
+      "analysisResult": "Notion CMS 개인 개발 블로그. docs/ROADMAP.md의 Structure-First 접근법(Phase1 골격 → Phase2 더미UI → Phase3 실연동 → Phase4 부가기능 → Phase5 최적화/배포)과 Task 001~013 순서를 그대로 승계한다. shrimp-rules.md 컨벤션 준수: app/*, components/*(ui 제외)는 4스페이스 들여쓰기·components/ui/*는 2스페이스 유지, @base-ui/react는 asChild 대신 render prop 패턴 사용, 신규 shadcn 컴포넌트는 /add-component 커맨드로만 추가, import는 @/* 별칭 사용, Notion 호출은 lib/notion.ts 단일 진입점, 글 목록/상세/카테고리 어디서도 Status≠발행됨 글 노출 금지, AGENTS.md 자동생성 블록 보존, .env.local 커밋 금지. Phase3(Task007~009-1)은 Playwright MCP E2E 테스트 필수. Task003(Notion 워크스페이스 설정)과 Task013(Vercel 배포)은 외부 서비스/계정 조작이 필요해 사용자 확인 후 진행. 각 Task 완료 시 docs/ROADMAP.md 상태 표기(✅ - 완료)를 갱신한다.",
+      "summary": "@notionhq/client(^5.27.0)를 package.json에 설치했고, .env.local에는 이미 실제 NOTION_API_KEY/NOTION_DATABASE_ID 값이 설정되어 있어 .gitignore(.env*)로 커밋에서 제외됨을 확인했다. lib/types.ts에 PRD 5번 표(Title/Category/Tags/Published/Status/Content) 매핑 주석과 함께 Status(초안/발행됨 리터럴), Category, Tag, Post 타입을 4스페이스 들여쓰기·한국어 주석으로 정의했다. npx tsc --noEmit, npm run lint 모두 에러 없이 통과했으며 docs/ROADMAP.md의 Task 002 항목을 완료 표기로 갱신했다.",
+      "completedAt": "2026-10-02T08:21:24.289Z"
     },
     {
       "id": "c25b3d6b-0c8e-429d-bc00-9a82052207ad",
