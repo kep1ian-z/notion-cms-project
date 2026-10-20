@@ -80,14 +80,14 @@ Notion을 CMS로 활용해 별도 배포 과정 없이 글이 자동으로 반�
 
 **예상 소요 시간**: 4~5일
 
-- **Task 007: Notion API 연동 - 글 목록 조회** - 우선순위
+- **Task 007: Notion API 연동 - 글 목록 조회** ✅ - 완료 (See: /lib/notion.ts)
   - `lib/notion.ts`에 Notion 클라이언트 초기화
   - `Status = 발행됨` 필터 + 최신순 정렬 쿼리 구현
   - 홈 페이지 더미 데이터를 실제 API 호출로 교체
   - Playwright MCP로 홈 페이지 글 목록 렌더링 E2E 테스트
   - 완료 기준: 실제 Notion 글 목록이 홈에 표시되고 초안(Status≠발행됨) 글은 노출되지 않음
 
-- **Task 008: Notion 글 상세 렌더링**
+- **Task 008: Notion 글 상세 렌더링** - 우선순위
   - slug 기준 단일 글 조회 API 구현
   - Notion 블록 콘텐츠를 블로그 포스트 형태로 렌더링
   - 존재하지 않는 slug 접근 시 404 처리

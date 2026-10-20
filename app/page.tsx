@@ -1,15 +1,15 @@
 import { CategoryFilter } from "@/components/category-filter";
 import { PostList } from "@/components/post-list";
 import { SearchBar } from "@/components/search-bar";
-import { dummyPosts } from "@/lib/dummy-data";
-import { getCategories, getPublishedPosts, searchPosts } from "@/lib/post-utils";
+import { fetchPublishedPosts } from "@/lib/notion";
+import { getCategories, searchPosts } from "@/lib/post-utils";
 
-// 홈: 최신 글 목록 (Task 007에서 더미 데이터를 Notion API 호출로 교체)
+// 홈: Notion에서 가져온 발행된 글 목록 (최신순)
 export default async function Home({ searchParams }: PageProps<"/">) {
     const { q } = await searchParams;
     const keyword = typeof q === "string" ? q : "";
 
-    const publishedPosts = getPublishedPosts(dummyPosts);
+    const publishedPosts = await fetchPublishedPosts();
     const posts = searchPosts(publishedPosts, keyword);
 
     return (
