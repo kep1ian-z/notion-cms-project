@@ -25,7 +25,7 @@ Notion을 CMS로 활용해 별도 배포 과정 없이 글이 자동으로 반�
 
 ---
 
-## Phase 1: 프로젝트 초기 설정 (골격 구축)
+## Phase 1: 프로젝트 초기 설정 (골격 구축) ✅
 
 **왜 이 순서인가**: 라우트 구조, 타입, 환경 변수, Notion 데이터베이스는 다른 모든 작업의 전제 조건이다. 여기서 확정해두면 UI 개발과 API 개발이 서로 기다리지 않고 병렬로 진행될 수 있다.
 
@@ -44,7 +44,7 @@ Notion을 CMS로 활용해 별도 배포 과정 없이 글이 자동으로 반�
   - Notion 데이터베이스 필드(Title/Category/Tags/Published/Status/Content) → 타입 매핑 문서화
   - 완료 기준: 타입 파일이 존재하고 `tsc`/`eslint`가 에러 없이 통과
 
-- **Task 003: Notion 데이터베이스 준비**
+- **Task 003: Notion 데이터베이스 준비** ✅ - 완료
   - Notion 워크스페이스에 데이터베이스 생성 (PRD 5번 구조에 맞춰 Title/Category/Tags/Published/Status/Content)
   - Integration 생성 및 API 키 발급, 데이터베이스에 Integration 공유 설정
   - 샘플 글 2~3개 입력 (Status: 발행됨/초안 혼합)

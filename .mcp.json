@@ -22,13 +22,15 @@
       "env": {}
     },
     "shadcn": {
+      "type": "stdio",
       "command": "npx",
       "args": [
+        "-y",
         "shadcn@latest",
         "mcp"
-      ]
+      ],
+      "env": {}
     },
-
     "shrimp-task-manager": {
       "command": "node",
       "args": ["C:/Users/choeu/workspace/mcp-shrimp-task-manager/dist/index.js"],
