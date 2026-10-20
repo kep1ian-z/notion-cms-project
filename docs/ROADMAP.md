@@ -62,7 +62,7 @@ Notion을 CMS로 활용해 별도 배포 과정 없이 글이 자동으로 반�
   - Tailwind CSS 기반 디자인 시스템/스타일 가이드 정리
   - 완료 기준: `/demo` 페이지에서 각 컴포넌트가 정상 렌더링됨
 
-- **Task 005: 더미 데이터 및 유틸리티 함수** ✅ - 완료 (See: /lib/dummy-data.ts, /lib/post-utils.ts)
+- **Task 005: 더미 데이터 및 유틸리티 함수** ✅ - 완료 (See: /lib/post-utils.ts. 더미 데이터는 Notion 연동 완료 후 제거)
   - 실제 Notion 응답 형태를 모사한 더미 `Post` 데이터셋 작성
   - 날짜 포맷팅, slug 생성, 카테고리/태그 필터링 유틸 함수 작성
   - 완료 기준: 유틸 함수가 예상 입출력대로 동작함을 확인
@@ -94,13 +94,13 @@ Notion을 CMS로 활용해 별도 배포 과정 없이 글이 자동으로 반�
   - Playwright MCP로 글 상세 페이지 E2E 테스트 (본문/이미지/코드블록 렌더링 확인)
   - 완료 기준: 실제 Notion 글 상세가 정상 렌더링되고 잘못된 slug는 404 처리됨
 
-- **Task 009: 카테고리 필터링 연동** - 우선순위
+- **Task 009: 카테고리 필터링 연동** ✅ - 완료 (See: /lib/notion.ts, /app/category/[category]/page.tsx)
   - Category 속성 기준 서버사이드 필터 쿼리 구현
   - `/category/[category]` 페이지 실제 데이터 연동
   - Playwright MCP로 카테고리 필터 E2E 테스트
   - 완료 기준: 카테고리 선택 시 해당 카테고리 글만 정확히 표시됨
 
-- **Task 009-1: 핵심 기능 통합 테스트**
+- **Task 009-1: 핵심 기능 통합 테스트** - 우선순위
   - Playwright MCP로 홈 → 상세 → 카테고리 전체 사용자 플로우 테스트
   - Notion API 오류/빈 데이터/네트워크 실패 등 에러 핸들링 검증
   - 완료 기준: 주요 플로우에 대한 E2E 테스트가 모두 통과

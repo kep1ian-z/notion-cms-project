@@ -1,32 +1,40 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { CategoryFilter } from "@/components/category-filter";
 import { PostList } from "@/components/post-list";
-import { dummyPosts } from "@/lib/dummy-data";
-import {
-    decodeParam,
-    filterByCategory,
-    getCategories,
-    getPublishedPosts,
-} from "@/lib/post-utils";
+import { fetchPostsByCategory, fetchPublishedPosts } from "@/lib/notion";
+import { decodeParam, getCategories } from "@/lib/post-utils";
 
-// 카테고리 페이지: 선택한 카테고리의 글 목록 (Task 009에서 Notion 서버사이드 필터로 교체)
+// URL의 카테고리를 Notion에 실제 있는 카테고리명으로 맞춘다 (대소문자 무시). 없으면 undefined
+async function resolveCategory(rawCategory: string) {
+    const categories = getCategories(await fetchPublishedPosts());
+    const target = decodeParam(rawCategory).toLowerCase();
+    return {
+        categories,
+        category: categories.find((item) => item.toLowerCase() === target),
+    };
+}
+
+export async function generateMetadata({
+    params,
+}: PageProps<"/category/[category]">): Promise<Metadata> {
+    const { category } = await resolveCategory((await params).category);
+    return { title: category ? `${category} | 개발 블로그` : "카테고리를 찾을 수 없습니다" };
+}
+
+// 카테고리 페이지: Notion에서 해당 카테고리의 발행된 글만 서버사이드로 조회한다
 export default async function CategoryPage({
     params,
 }: PageProps<"/category/[category]">) {
-    const { category: rawCategory } = await params;
-    const publishedPosts = getPublishedPosts(dummyPosts);
-    const categories = getCategories(publishedPosts);
-
-    // 대소문자만 다른 URL도 실제 카테고리명으로 맞춘다
-    const category = categories.find(
-        (item) => item.toLowerCase() === decodeParam(rawCategory).toLowerCase(),
+    const { categories, category } = await resolveCategory(
+        (await params).category,
     );
     if (!category) {
         notFound();
     }
 
-    const posts = filterByCategory(publishedPosts, category);
+    const posts = await fetchPostsByCategory(category);
 
     return (
         <div className="mx-auto flex max-w-5xl flex-col gap-8 px-4 py-12 sm:py-16">

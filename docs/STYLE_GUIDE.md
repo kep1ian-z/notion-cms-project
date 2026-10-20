@@ -32,9 +32,9 @@
 - 카드 안에 링크가 중첩되지 않도록, `PostCard`는 제목 링크의 `after:absolute after:inset-0`로 카드 전체를 클릭 가능하게 만든다. 카드 안에서는 `CategoryBadge`를 `linked`로 쓰지 않는다.
 - 날짜는 `time` 요소와 `ko-KR` 로케일(`timeZone: "UTC"`)로 표시해 서버/클라이언트 간 하이드레이션 불일치를 막는다.
 
-## 데이터/유틸 (Phase 2 더미 단계)
+## 데이터/유틸
 
-- `lib/dummy-data.ts`: Notion 응답을 모사한 `dummyPosts`(발행됨 4건, 초안 1건). Task 007에서 실제 API 호출로 교체한다.
+- 더미 데이터(`lib/dummy-data.ts`)는 Notion 연동(Task 007~009) 완료 후 제거했다. 글 데이터는 `lib/notion.ts`에서 가져온다.
 - `lib/post-utils.ts`: `formatDate`, `generateSlug`, `getPublishedPosts`, `filterByCategory`, `filterByTag`, `searchPosts`, `getCategories`, `getTags`. 모두 순수 함수이며 카테고리/태그 비교는 대소문자를 구분하지 않는다.
 
 ## 글 상세 / slug (Phase 3)

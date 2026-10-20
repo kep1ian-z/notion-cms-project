@@ -81,10 +81,18 @@ function pageToPost(page: PageObjectResponse): Post {
     };
 }
 
-/** Status = 발행됨 인 글을 발행일 최신순으로 모두 가져온다. */
-export const fetchPublishedPosts = cache(async (): Promise<Post[]> => {
+/**
+ * 발행된 글을 발행일 최신순으로 모두 가져온다.
+ * 모든 조회가 이 함수를 거치므로 Status = 발행됨 필터가 항상 포함된다. category를 주면 서버사이드로 함께 필터링한다.
+ */
+async function queryPublishedPosts(category?: string): Promise<Post[]> {
     const notion = getClient();
     const dataSource = await getDataSourceId();
+
+    const statusFilter = {
+        property: "Status",
+        select: { equals: PUBLISHED_STATUS },
+    };
 
     const posts: Post[] = [];
     let cursor: string | undefined;
@@ -92,10 +100,14 @@ export const fetchPublishedPosts = cache(async (): Promise<Post[]> => {
     do {
         const response = await notion.dataSources.query({
             data_source_id: dataSource,
-            filter: {
-                property: "Status",
-                select: { equals: PUBLISHED_STATUS },
-            },
+            filter: category
+                ? {
+                      and: [
+                          statusFilter,
+                          { property: "Category", select: { equals: category } },
+                      ],
+                  }
+                : statusFilter,
             sorts: [{ property: "Published", direction: "descending" }],
             start_cursor: cursor,
             page_size: 100,
@@ -110,7 +122,15 @@ export const fetchPublishedPosts = cache(async (): Promise<Post[]> => {
     } while (cursor);
 
     return posts;
-});
+}
+
+/** Status = 발행됨 인 글 전체를 최신순으로 가져온다. (한 요청 안에서는 결과를 재사용한다) */
+export const fetchPublishedPosts = cache(() => queryPublishedPosts());
+
+/** 카테고리명이 정확히 일치하는 발행된 글을 최신순으로 가져온다. */
+export const fetchPostsByCategory = cache((category: string) =>
+    queryPublishedPosts(category),
+);
 
 /**
  * slug로 발행된 글 한 건을 찾는다. slug 끝의 페이지 ID 식별자로만 매칭하므로
