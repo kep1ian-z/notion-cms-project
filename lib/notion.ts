@@ -11,6 +11,9 @@ import type { NotionBlock, Post, Status } from "@/lib/types";
 // 웹사이트에 노출하는 유일한 상태값
 const PUBLISHED_STATUS: Status = "발행됨";
 
+// Notion 요청 1건당 최대 대기 시간
+const NOTION_TIMEOUT_MS = 15_000;
+
 let notionClient: Client | null = null;
 let dataSourceId: string | null = null;
 
@@ -20,7 +23,8 @@ function getClient(): Client {
     if (!apiKey) {
         throw new Error("NOTION_API_KEY 환경 변수가 설정되지 않았습니다.");
     }
-    notionClient ??= new Client({ auth: apiKey });
+    // 응답이 없을 때 페이지가 오래 매달리지 않도록 요청당 타임아웃을 짧게 둔다 (SDK 기본 60초)
+    notionClient ??= new Client({ auth: apiKey, timeoutMs: NOTION_TIMEOUT_MS });
     return notionClient;
 }
 
