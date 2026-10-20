@@ -63,3 +63,12 @@ export function getCategories(posts: Post[]): Category[] {
 export function getTags(posts: Post[]): Tag[] {
     return [...new Set(posts.flatMap((post) => post.tags))].sort();
 }
+
+/** URL 파라미터를 디코딩한다. 잘못된 인코딩이면 원본을 그대로 반환한다. */
+export function decodeParam(value: string): string {
+    try {
+        return decodeURIComponent(value);
+    } catch {
+        return value;
+    }
+}

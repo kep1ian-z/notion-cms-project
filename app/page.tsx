@@ -1,38 +1,46 @@
-import Link from "next/link";
+import { CategoryFilter } from "@/components/category-filter";
+import { PostList } from "@/components/post-list";
+import { SearchBar } from "@/components/search-bar";
+import { dummyPosts } from "@/lib/dummy-data";
+import { getCategories, getPublishedPosts, searchPosts } from "@/lib/post-utils";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+// 홈: 최신 글 목록 (Task 007에서 더미 데이터를 Notion API 호출로 교체)
+export default async function Home({ searchParams }: PageProps<"/">) {
+    const { q } = await searchParams;
+    const keyword = typeof q === "string" ? q : "";
 
-export default function Home() {
+    const publishedPosts = getPublishedPosts(dummyPosts);
+    const posts = searchPosts(publishedPosts, keyword);
+
     return (
-        <div className="mx-auto flex max-w-5xl flex-col items-center gap-6 px-4 py-24 text-center">
-            <Badge>Starter Kit</Badge>
-            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
-                Next.js 웹 스타터킷
-            </h1>
-            <p className="max-w-xl text-balance text-muted-foreground">
-                Next.js App Router, TypeScript, Tailwind CSS, shadcn/ui가 미리
-                구성되어 있습니다. 바로 기능 개발을 시작해보세요.
-            </p>
-            <div className="flex items-center gap-3">
-                <Button size="lg" nativeButton={false} render={<Link href="/demo" />}>
-                    데모 보기
-                </Button>
-                <Button
-                    size="lg"
-                    variant="outline"
-                    nativeButton={false}
-                    render={
-                        <a
-                            href="https://github.com"
-                            target="_blank"
-                            rel="noreferrer"
-                        />
+        <div className="mx-auto flex max-w-5xl flex-col gap-8 px-4 py-12 sm:py-16">
+            <section className="flex flex-col gap-2">
+                <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
+                    개발 블로그
+                </h1>
+                <p className="text-muted-foreground">
+                    Notion에 쓴 글이 그대로 블로그가 됩니다.
+                </p>
+            </section>
+
+            <section className="flex flex-col gap-4">
+                <SearchBar defaultValue={keyword} />
+                <CategoryFilter categories={getCategories(publishedPosts)} />
+            </section>
+
+            <section className="flex flex-col gap-4">
+                <h2 className="text-xl font-semibold">
+                    {keyword ? `"${keyword}" 검색 결과` : "최근 글"}
+                </h2>
+                <PostList
+                    posts={posts}
+                    emptyMessage={
+                        keyword
+                            ? "검색 결과가 없습니다."
+                            : "아직 발행된 글이 없습니다."
                     }
-                >
-                    GitHub
-                </Button>
-            </div>
+                />
+            </section>
         </div>
     );
 }

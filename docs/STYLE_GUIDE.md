@@ -10,7 +10,7 @@
 ## 레이아웃
 
 - 페이지 컨테이너: `mx-auto max-w-5xl px-4` (Header/Footer와 동일)
-- 글 목록: `grid gap-4 sm:grid-cols-2` (모바일 1열, sm 이상 2열)
+- 글 목록: `grid gap-4 sm:grid-cols-2 lg:grid-cols-3` (모바일 1열, sm 2열, lg 3열)
 - 섹션 간격: `gap-16`, 섹션 내부: `gap-4`
 
 ## 블로그 컴포넌트
@@ -20,7 +20,9 @@
 | `PostCard` | `components/post-card.tsx` | 글 목록의 카드. 카드 전체가 `/posts/[slug]` 링크 |
 | `CategoryBadge` | `components/category-badge.tsx` | 카테고리 뱃지. `linked`이면 `/category/[category]` 링크 |
 | `TagList` | `components/tag-list.tsx` | 태그 목록(outline 뱃지). 태그가 없으면 렌더링하지 않음 |
-| `SearchBar` | `components/search-bar.tsx` | 검색 입력. `onSearch`로 검색어 전달 (연동은 Task 010) |
+| `SearchBar` | `components/search-bar.tsx` | 검색 입력. GET 폼이라 제출 시 `?q=`로 이동 (홈에서 제목/태그 필터링) |
+| `CategoryFilter` | `components/category-filter.tsx` | "전체" + 카테고리 이동 버튼. `activeCategory`로 선택 상태 표시 |
+| `PostList` | `components/post-list.tsx` | 글 카드 그리드(1/2/3열)와 빈 상태 메시지 |
 | `SiteHeader` / `SiteFooter` | `components/site-*.tsx` | 공통 레이아웃 |
 
 ## 작성 규칙
