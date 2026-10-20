@@ -1,0 +1,57 @@
+// Notion 응답을 모사한 더미 글 데이터. Phase 3(Task 007)에서 실제 API 호출로 교체한다.
+import type { Post } from "@/lib/types";
+
+export const dummyPosts: Post[] = [
+    {
+        id: "dummy-1",
+        slug: "abc-476-solution",
+        title: "ABC 476 풀이",
+        category: "PS",
+        tags: ["atcoder", "algorithm"],
+        publishedAt: "2026-09-21",
+        status: "발행됨",
+        excerpt: "AtCoder Beginner Contest 476의 A~E번 문제 풀이를 정리했습니다.",
+        content: "A~E번 문제의 접근 방법과 시간 복잡도를 정리합니다.",
+    },
+    {
+        id: "dummy-2",
+        slug: "nextjs-app-router-notion-cms",
+        title: "Next.js App Router로 Notion CMS 블로그 만들기",
+        category: "Web",
+        tags: ["nextjs", "notion", "typescript"],
+        publishedAt: "2026-08-15",
+        status: "발행됨",
+        excerpt: "Notion 데이터베이스를 CMS로 쓰는 블로그의 전체 구조를 소개합니다.",
+        content: "라우팅, 데이터 패칭, 렌더링 순서로 구조를 설명합니다.",
+    },
+    {
+        id: "dummy-3",
+        slug: "korean-football-revival",
+        title: "한국 축구가 살아나려면…",
+        category: "Football",
+        tags: ["rants"],
+        publishedAt: "2026-07-09",
+        status: "발행됨",
+        excerpt: "최근 대표팀 경기를 보고 느낀 점을 두서없이 적었습니다.",
+    },
+    {
+        id: "dummy-4",
+        slug: "tailwind-v4-migration",
+        title: "Tailwind CSS v4 마이그레이션 메모",
+        category: "Web",
+        tags: ["tailwind", "css"],
+        publishedAt: "2026-06-02",
+        status: "발행됨",
+        excerpt: "설정 파일 없이 CSS만으로 구성하는 v4 방식을 정리했습니다.",
+    },
+    {
+        id: "dummy-5",
+        slug: "problem-setting-chronicle",
+        title: "나의 프로그래밍 대회 출제 연대기",
+        category: "PS",
+        tags: ["BOJ", "problemsetting"],
+        publishedAt: "2026-10-21",
+        status: "초안",
+        excerpt: "아직 작성 중인 글입니다.",
+    },
+];

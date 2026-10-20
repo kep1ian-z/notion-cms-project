@@ -29,3 +29,8 @@
 - 링크 형태의 버튼/뱃지는 `asChild`가 아니라 `render` prop을 사용한다 (`nativeButton={false}` 포함).
 - 카드 안에 링크가 중첩되지 않도록, `PostCard`는 제목 링크의 `after:absolute after:inset-0`로 카드 전체를 클릭 가능하게 만든다. 카드 안에서는 `CategoryBadge`를 `linked`로 쓰지 않는다.
 - 날짜는 `time` 요소와 `ko-KR` 로케일(`timeZone: "UTC"`)로 표시해 서버/클라이언트 간 하이드레이션 불일치를 막는다.
+
+## 데이터/유틸 (Phase 2 더미 단계)
+
+- `lib/dummy-data.ts`: Notion 응답을 모사한 `dummyPosts`(발행됨 4건, 초안 1건). Task 007에서 실제 API 호출로 교체한다.
+- `lib/post-utils.ts`: `formatDate`, `generateSlug`, `getPublishedPosts`, `filterByCategory`, `filterByTag`, `searchPosts`, `getCategories`, `getTags`. 모두 순수 함수이며 카테고리/태그 비교는 대소문자를 구분하지 않는다.

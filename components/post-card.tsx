@@ -9,6 +9,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
+import { formatDate } from "@/lib/post-utils";
 import type { Post } from "@/lib/types";
 
 interface PostCardProps {
@@ -17,11 +18,6 @@ interface PostCardProps {
 
 // 글 목록에서 글 한 건을 카드로 보여준다 (카드 전체가 상세 페이지 링크)
 export function PostCard({ post }: PostCardProps) {
-    const publishedDate = new Date(post.publishedAt).toLocaleDateString(
-        "ko-KR",
-        { year: "numeric", month: "long", day: "numeric", timeZone: "UTC" },
-    );
-
     return (
         <Card className="relative h-full transition-shadow hover:ring-foreground/25">
             <CardHeader>
@@ -31,7 +27,7 @@ export function PostCard({ post }: PostCardProps) {
                         dateTime={post.publishedAt}
                         className="text-xs text-muted-foreground"
                     >
-                        {publishedDate}
+                        {formatDate(post.publishedAt)}
                     </time>
                 </div>
                 <CardTitle className="text-lg">
