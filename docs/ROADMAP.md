@@ -56,7 +56,7 @@ Notion을 CMS로 활용해 별도 배포 과정 없이 글이 자동으로 반�
 
 **예상 소요 시간**: 3~4일
 
-- **Task 004: 공통 UI 컴포넌트 라이브러리 구축**
+- **Task 004: 공통 UI 컴포넌트 라이브러리 구축** ✅ - 완료 (See: /docs/STYLE_GUIDE.md)
   - shadcn/ui 기반 컴포넌트 설치 (Card, Badge, Button, Input 등)
   - `PostCard`, `CategoryBadge`, `TagList`, `Header`, `Footer`, `SearchBar` 컴포넌트 구현
   - Tailwind CSS 기반 디자인 시스템/스타일 가이드 정리

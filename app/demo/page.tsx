@@ -2,6 +2,11 @@
 
 import { toast } from "sonner";
 
+import { CategoryBadge } from "@/components/category-badge";
+import { PostCard } from "@/components/post-card";
+import { SearchBar } from "@/components/search-bar";
+import { TagList } from "@/components/tag-list";
+import type { Post } from "@/lib/types";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -48,6 +53,29 @@ import {
 } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 
+// 데모용 샘플 글 (실제 더미 데이터셋은 Task 005에서 작성)
+const samplePosts: Post[] = [
+    {
+        id: "demo-1",
+        slug: "abc-476",
+        title: "ABC 476 풀이",
+        category: "PS",
+        tags: ["atcoder", "algorithm"],
+        publishedAt: "2026-09-21",
+        status: "발행됨",
+        excerpt: "AtCoder Beginner Contest 476의 A~E번 문제 풀이를 정리했습니다.",
+    },
+    {
+        id: "demo-2",
+        slug: "korean-football",
+        title: "한국 축구가 살아나려면…",
+        category: "football",
+        tags: ["rants"],
+        publishedAt: "2026-07-09",
+        status: "발행됨",
+    },
+];
+
 export default function DemoPage() {
     return (
         <div className="mx-auto flex max-w-5xl flex-col gap-16 px-4 py-16">
@@ -59,6 +87,21 @@ export default function DemoPage() {
                     스타터킷에 포함된 shadcn/ui 컴포넌트 사용 예시입니다.
                 </p>
             </div>
+
+            <section className="flex flex-col gap-4">
+                <h2 className="text-xl font-semibold">Blog Components</h2>
+                <SearchBar />
+                <div className="flex flex-wrap items-center gap-3">
+                    <CategoryBadge category="PS" />
+                    <CategoryBadge category="football" linked />
+                    <TagList tags={["atcoder", "algorithm", "rants"]} />
+                </div>
+                <div className="grid gap-4 sm:grid-cols-2">
+                    {samplePosts.map((post) => (
+                        <PostCard key={post.id} post={post} />
+                    ))}
+                </div>
+            </section>
 
             <section className="flex flex-col gap-4">
                 <h2 className="text-xl font-semibold">Buttons & Badges</h2>
