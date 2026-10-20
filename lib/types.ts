@@ -1,5 +1,12 @@
 // Notion 데이터베이스(docs/PRD.md 5번 표)와 매핑되는 타입 정의 모음.
 // 이후 lib/notion.ts에서 Notion API 응답을 이 타입으로 변환해 사용한다.
+import type { BlockObjectResponse } from "@notionhq/client";
+
+/**
+ * Notion 블록 한 건과 그 하위 블록(재귀).
+ * 글 상세 페이지의 본문(Content) 렌더링에 사용한다.
+ */
+export type NotionBlock = BlockObjectResponse & { children?: NotionBlock[] };
 
 /**
  * Status 속성(상태) 값.

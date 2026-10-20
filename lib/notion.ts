@@ -1,11 +1,12 @@
 // Notion 클라이언트 초기화와 글 조회 함수. 페이지/컴포넌트는 이 파일의 export만 사용한다.
 import "server-only";
 
-import { Client, isFullPage } from "@notionhq/client";
+import { Client, collectPaginatedAPI, isFullBlock, isFullPage } from "@notionhq/client";
+import { cache } from "react";
 import type { PageObjectResponse } from "@notionhq/client";
 
-import { generateSlug } from "@/lib/post-utils";
-import type { Post, Status } from "@/lib/types";
+import { buildPostSlug, getIdSuffix, parsePostSlugSuffix } from "@/lib/post-utils";
+import type { NotionBlock, Post, Status } from "@/lib/types";
 
 // 웹사이트에 노출하는 유일한 상태값
 const PUBLISHED_STATUS: Status = "발행됨";
@@ -58,8 +59,8 @@ function pageToPost(page: PageObjectResponse): Post {
 
     return {
         id: page.id,
-        // slug는 Notion 필드가 아니라 제목에서 생성하고, 제목이 비어 있으면 페이지 ID를 쓴다
-        slug: generateSlug(title) || page.id,
+        // slug는 Notion 필드가 아니라 제목 + 페이지 ID 뒤 8자리로 생성한다 (제목이 같아도 겹치지 않음)
+        slug: buildPostSlug(title, page.id),
         title: title || "제목 없음",
         category:
             Category?.type === "select" && Category.select
@@ -81,7 +82,7 @@ function pageToPost(page: PageObjectResponse): Post {
 }
 
 /** Status = 발행됨 인 글을 발행일 최신순으로 모두 가져온다. */
-export async function fetchPublishedPosts(): Promise<Post[]> {
+export const fetchPublishedPosts = cache(async (): Promise<Post[]> => {
     const notion = getClient();
     const dataSource = await getDataSourceId();
 
@@ -109,4 +110,45 @@ export async function fetchPublishedPosts(): Promise<Post[]> {
     } while (cursor);
 
     return posts;
+});
+
+/**
+ * slug로 발행된 글 한 건을 찾는다. slug 끝의 페이지 ID 식별자로만 매칭하므로
+ * 제목이 바뀐 뒤 옛 slug로 접근해도 같은 글을 찾는다. 없거나 초안이면 null.
+ */
+export async function fetchPostBySlug(slug: string): Promise<Post | null> {
+    const suffix = parsePostSlugSuffix(slug);
+    if (!suffix) {
+        return null;
+    }
+
+    const posts = await fetchPublishedPosts();
+    return posts.find((post) => getIdSuffix(post.id) === suffix) ?? null;
+}
+
+/** 블록 하나의 하위 블록을 재귀적으로 가져온다. */
+async function fetchBlockChildren(blockId: string): Promise<NotionBlock[]> {
+    const results = await collectPaginatedAPI(getClient().blocks.children.list, {
+        block_id: blockId,
+    });
+    const blocks: NotionBlock[] = results.filter(isFullBlock);
+
+    // 하위 페이지/데이터베이스는 본문이 아니므로 따라 들어가지 않는다
+    await Promise.all(
+        blocks.map(async (block) => {
+            if (
+                block.has_children &&
+                block.type !== "child_page" &&
+                block.type !== "child_database"
+            ) {
+                block.children = await fetchBlockChildren(block.id);
+            }
+        }),
+    );
+    return blocks;
+}
+
+/** 글(페이지)의 본문 블록 전체를 가져온다. */
+export async function fetchPostBlocks(pageId: string): Promise<NotionBlock[]> {
+    return fetchBlockChildren(pageId);
 }

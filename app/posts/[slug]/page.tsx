@@ -1,25 +1,43 @@
 import { ArrowLeft } from "lucide-react";
+import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 import { CategoryBadge } from "@/components/category-badge";
+import { NotionBlocks } from "@/components/notion-blocks";
 import { TagList } from "@/components/tag-list";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { dummyPosts } from "@/lib/dummy-data";
-import { decodeParam, formatDate, getPublishedPosts } from "@/lib/post-utils";
+import { fetchPostBlocks, fetchPostBySlug } from "@/lib/notion";
+import { decodeParam, formatDate } from "@/lib/post-utils";
 
-// 글 상세 페이지 (Task 008에서 Notion 블록 렌더링으로 교체). 없는 slug는 404 처리한다
+// 브라우저 탭/공유 시 글 제목을 쓰기 위한 메타데이터 (fetchPublishedPosts는 요청 내 캐시됨)
+export async function generateMetadata({
+    params,
+}: PageProps<"/posts/[slug]">): Promise<Metadata> {
+    const { slug } = await params;
+    const post = await fetchPostBySlug(decodeParam(slug));
+    return { title: post ? `${post.title} | 개발 블로그` : "글을 찾을 수 없습니다" };
+}
+
+// 글 상세 페이지: Notion 본문 블록을 렌더링한다. 없는/초안 글은 404 처리한다
 export default async function PostPage({
     params,
 }: PageProps<"/posts/[slug]">) {
     const { slug } = await params;
-    const post = getPublishedPosts(dummyPosts).find(
-        (item) => item.slug === decodeParam(slug),
-    );
+    const decodedSlug = decodeParam(slug);
+
+    const post = await fetchPostBySlug(decodedSlug);
     if (!post) {
         notFound();
     }
+
+    // 제목이 바뀌어 옛 slug로 들어온 경우 현재 slug로 이동시킨다
+    if (decodedSlug !== post.slug) {
+        redirect(`/posts/${encodeURIComponent(post.slug)}`);
+    }
+
+    const blocks = await fetchPostBlocks(post.id);
 
     return (
         <article className="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-12 sm:py-16">
@@ -52,8 +70,14 @@ export default async function PostPage({
 
             <Separator />
 
-            <div className="flex flex-col gap-4 text-base leading-8">
-                <p>{post.content ?? post.excerpt}</p>
+            <div className="text-base leading-8">
+                {blocks.length > 0 ? (
+                    <NotionBlocks blocks={blocks} />
+                ) : (
+                    <p className="text-muted-foreground">
+                        아직 작성된 본문이 없습니다.
+                    </p>
+                )}
             </div>
         </article>
     );

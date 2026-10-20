@@ -72,3 +72,21 @@ export function decodeParam(value: string): string {
         return value;
     }
 }
+
+/** Notion 페이지 ID(하이픈 유무 무관)의 뒤 8자리를 slug 식별자로 쓴다. 앞자리는 생성 시각 기반이라 글끼리 같을 수 있다. */
+export function getIdSuffix(pageId: string): string {
+    return pageId.replace(/-/g, "").slice(-8).toLowerCase();
+}
+
+/** 제목 slug 뒤에 페이지 ID 식별자를 붙여 제목이 같은 글끼리도 겹치지 않는 slug를 만든다. */
+export function buildPostSlug(title: string, pageId: string): string {
+    const base = generateSlug(title);
+    const suffix = getIdSuffix(pageId);
+    return base ? `${base}-${suffix}` : suffix;
+}
+
+/** slug 끝의 8자리 식별자를 꺼낸다. 형식이 맞지 않으면 null을 반환한다. */
+export function parsePostSlugSuffix(slug: string): string | null {
+    const match = slug.match(/(?:^|-)([0-9a-f]{8})$/);
+    return match ? match[1] : null;
+}

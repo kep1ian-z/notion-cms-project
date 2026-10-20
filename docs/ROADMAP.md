@@ -87,14 +87,14 @@ Notion을 CMS로 활용해 별도 배포 과정 없이 글이 자동으로 반�
   - Playwright MCP로 홈 페이지 글 목록 렌더링 E2E 테스트
   - 완료 기준: 실제 Notion 글 목록이 홈에 표시되고 초안(Status≠발행됨) 글은 노출되지 않음
 
-- **Task 008: Notion 글 상세 렌더링** - 우선순위
+- **Task 008: Notion 글 상세 렌더링** ✅ - 완료 (See: /lib/notion.ts, /components/notion-blocks.tsx)
   - slug 기준 단일 글 조회 API 구현
   - Notion 블록 콘텐츠를 블로그 포스트 형태로 렌더링
   - 존재하지 않는 slug 접근 시 404 처리
   - Playwright MCP로 글 상세 페이지 E2E 테스트 (본문/이미지/코드블록 렌더링 확인)
   - 완료 기준: 실제 Notion 글 상세가 정상 렌더링되고 잘못된 slug는 404 처리됨
 
-- **Task 009: 카테고리 필터링 연동**
+- **Task 009: 카테고리 필터링 연동** - 우선순위
   - Category 속성 기준 서버사이드 필터 쿼리 구현
   - `/category/[category]` 페이지 실제 데이터 연동
   - Playwright MCP로 카테고리 필터 E2E 테스트

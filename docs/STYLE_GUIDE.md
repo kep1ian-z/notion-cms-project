@@ -36,3 +36,11 @@
 
 - `lib/dummy-data.ts`: Notion 응답을 모사한 `dummyPosts`(발행됨 4건, 초안 1건). Task 007에서 실제 API 호출로 교체한다.
 - `lib/post-utils.ts`: `formatDate`, `generateSlug`, `getPublishedPosts`, `filterByCategory`, `filterByTag`, `searchPosts`, `getCategories`, `getTags`. 모두 순수 함수이며 카테고리/태그 비교는 대소문자를 구분하지 않는다.
+
+## 글 상세 / slug (Phase 3)
+
+- slug 형식: `{제목 slug}-{Notion 페이지 ID 뒤 8자리}` (예: `abc-476-풀이-7b566262`). Notion 페이지 ID의 앞부분은 생성 시각 기반이라 글끼리 같을 수 있으므로 **뒤 8자리**를 쓴다.
+- 조회는 slug 끝의 식별자로만 매칭한다. 제목이 바뀐 뒤 옛 slug로 접근하면 현재 slug로 307 리다이렉트한다. 초안이거나 없는 글은 404.
+- 본문은 `lib/notion.ts`의 `fetchPostBlocks`가 블록을 재귀로 가져오고, `components/notion-blocks.tsx`의 `NotionBlocks`가 렌더링한다.
+- 지원 블록: 문단, 제목 1~3(h2~h4), 불릿/번호 리스트(중첩), 할 일, 인용, 콜아웃, 코드, 이미지, 구분선, 토글, 북마크/임베드(링크), 표. 그 외(영상/파일/수식 등)는 건너뛴다.
+- 코드 하이라이팅, 이미지 최적화(`next/image`)는 각각 Task 011, 012에서 다룬다.
