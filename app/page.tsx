@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { CategoryFilter } from "@/components/category-filter";
 import { PostList } from "@/components/post-list";
 import { SearchBar } from "@/components/search-bar";
@@ -24,19 +26,32 @@ export default async function Home({ searchParams }: PageProps<"/">) {
             </section>
 
             <section className="flex flex-col gap-4">
-                <SearchBar defaultValue={keyword} />
+                {/* 검색어가 바뀌면 입력창을 새로 마운트해 uncontrolled defaultValue 경고와 잔존 값을 막는다 */}
+                <SearchBar key={keyword} defaultValue={keyword} />
                 <CategoryFilter categories={getCategories(publishedPosts)} />
             </section>
 
             <section className="flex flex-col gap-4">
-                <h2 className="text-xl font-semibold">
-                    {keyword ? `"${keyword}" 검색 결과` : "최근 글"}
-                </h2>
+                <div className="flex items-center justify-between gap-4">
+                    <h2 className="text-xl font-semibold">
+                        {keyword
+                            ? `"${keyword}" 검색 결과 ${posts.length}개`
+                            : "최근 글"}
+                    </h2>
+                    {keyword && (
+                        <Link
+                            href="/"
+                            className="text-sm text-muted-foreground underline-offset-4 hover:underline"
+                        >
+                            검색 초기화
+                        </Link>
+                    )}
+                </div>
                 <PostList
                     posts={posts}
                     emptyMessage={
                         keyword
-                            ? "검색 결과가 없습니다."
+                            ? `"${keyword}"에 해당하는 글이 없습니다. 다른 제목이나 태그로 검색해 보세요.`
                             : "아직 발행된 글이 없습니다."
                     }
                 />

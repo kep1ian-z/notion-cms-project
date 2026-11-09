@@ -111,7 +111,7 @@ Notion을 CMS로 활용해 별도 배포 과정 없이 글이 자동으로 반�
 
 **예상 소요 시간**: 3~4일
 
-- **Task 010: 검색 기능 구현** - 우선순위
+- **Task 010: 검색 기능 구현** ✅ - 완료 (See: /app/page.tsx, /components/search-bar.tsx, /lib/post-utils.ts)
   - 제목/태그 기준 검색 구현
   - 검색 결과 없음 상태 UI 처리
   - Playwright MCP로 검색 플로우 E2E 테스트
