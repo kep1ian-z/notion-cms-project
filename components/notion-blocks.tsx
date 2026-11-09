@@ -1,4 +1,5 @@
 import type { RichTextItemResponse } from "@notionhq/client";
+import Image from "next/image";
 import type { ReactNode } from "react";
 
 import { CodeBlock } from "@/components/code-block";
@@ -162,13 +163,15 @@ function Block({ block }: { block: NotionBlock }) {
                 .join("");
             return (
                 <figure className="flex flex-col gap-2">
-                    {/* Notion 이미지 URL은 만료되므로 최적화(next/image)는 Task 012에서 다룬다 */}
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                    {/* 원본 크기를 모르므로 width/height를 0으로 두고 CSS로 비율을 유지한다. 외부 링크 이미지는 호스트 제한 때문에 최적화에서 제외한다 */}
+                    <Image
                         src={src}
                         alt={caption}
-                        loading="lazy"
-                        className="h-auto max-w-full rounded-lg"
+                        width={0}
+                        height={0}
+                        sizes="(min-width: 768px) 768px, 100vw"
+                        unoptimized={block.image.type === "external"}
+                        className="h-auto w-full rounded-lg"
                     />
                     {caption && (
                         <figcaption className="text-center text-sm text-muted-foreground">

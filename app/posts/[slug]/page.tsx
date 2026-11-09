@@ -9,8 +9,25 @@ import { TableOfContents } from "@/components/table-of-contents";
 import { TagList } from "@/components/tag-list";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { fetchPostBlocks, fetchPostBySlug } from "@/lib/notion";
+import {
+    fetchPostBlocks,
+    fetchPostBySlug,
+    fetchPublishedPosts,
+} from "@/lib/notion";
 import { decodeParam, formatDate, getHeadings } from "@/lib/post-utils";
+
+// ISR: 10분마다 백그라운드에서 다시 생성한다. Notion 이미지 URL이 1시간 뒤 만료되므로 lib/notion.ts의 캐시 시간과 맞춘다
+export const revalidate = 600;
+
+// 빌드 시 발행된 글을 미리 생성한다. Notion 조회가 실패해도 빌드는 통과시키고 첫 요청 때 생성한다
+export async function generateStaticParams() {
+    try {
+        const posts = await fetchPublishedPosts();
+        return posts.map((post) => ({ slug: post.slug }));
+    } catch {
+        return [];
+    }
+}
 
 // 브라우저 탭/공유 시 글 제목을 쓰기 위한 메타데이터 (fetchPublishedPosts는 요청 내 캐시됨)
 export async function generateMetadata({

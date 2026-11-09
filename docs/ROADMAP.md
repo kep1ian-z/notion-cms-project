@@ -128,7 +128,7 @@ Notion을 CMS로 활용해 별도 배포 과정 없이 글이 자동으로 반�
 
 **예상 소요 시간**: 2~3일
 
-- **Task 012: 성능 최적화**
+- **Task 012: 성능 최적화** ✅ - 완료 (See: /lib/notion.ts, /next.config.ts, /app/posts/[slug]/page.tsx)
   - ISR(Incremental Static Regeneration) 또는 캐싱 전략 적용으로 Notion API 호출 최소화
   - `next/image` 기반 이미지 최적화, 폰트 최적화
   - Lighthouse 성능 점수 측정 및 개선

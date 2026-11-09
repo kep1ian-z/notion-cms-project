@@ -2,6 +2,7 @@
 import "server-only";
 
 import { Client, collectPaginatedAPI, isFullBlock, isFullPage } from "@notionhq/client";
+import { unstable_cache } from "next/cache";
 import { cache } from "react";
 import type { PageObjectResponse } from "@notionhq/client";
 
@@ -13,6 +14,13 @@ const PUBLISHED_STATUS: Status = "발행됨";
 
 // Notion 요청 1건당 최대 대기 시간
 const NOTION_TIMEOUT_MS = 15_000;
+
+// Notion 응답 캐시 유효 시간(초). Notion 파일(이미지) URL은 1시간 뒤 만료되므로 그보다 훨씬 짧게 둔다.
+// 글 상세 페이지의 `export const revalidate`(정적 분석을 위해 리터럴이어야 함)와 같은 값으로 맞춘다.
+const REVALIDATE_SECONDS = 600;
+
+// 캐시 태그. revalidateTag(POSTS_CACHE_TAG, "max")로 Notion 응답 캐시를 즉시 무효화할 수 있다
+export const POSTS_CACHE_TAG = "notion-posts";
 
 let notionClient: Client | null = null;
 let dataSourceId: string | null = null;
@@ -89,7 +97,7 @@ function pageToPost(page: PageObjectResponse): Post {
  * 발행된 글을 발행일 최신순으로 모두 가져온다.
  * 모든 조회가 이 함수를 거치므로 Status = 발행됨 필터가 항상 포함된다. category를 주면 서버사이드로 함께 필터링한다.
  */
-async function queryPublishedPosts(category?: string): Promise<Post[]> {
+async function fetchPublishedPostsFromNotion(category?: string): Promise<Post[]> {
     const notion = getClient();
     const dataSource = await getDataSourceId();
 
@@ -127,6 +135,13 @@ async function queryPublishedPosts(category?: string): Promise<Post[]> {
 
     return posts;
 }
+
+// Notion SDK는 fetch를 쓰지 않아 자동 캐시되지 않으므로 unstable_cache로 감싸 Notion API 호출을 줄인다
+const queryPublishedPosts = unstable_cache(
+    fetchPublishedPostsFromNotion,
+    ["published-posts"],
+    { revalidate: REVALIDATE_SECONDS, tags: [POSTS_CACHE_TAG] },
+);
 
 /** Status = 발행됨 인 글 전체를 최신순으로 가져온다. (한 요청 안에서는 결과를 재사용한다) */
 export const fetchPublishedPosts = cache(() => queryPublishedPosts());
@@ -172,7 +187,9 @@ async function fetchBlockChildren(blockId: string): Promise<NotionBlock[]> {
     return blocks;
 }
 
-/** 글(페이지)의 본문 블록 전체를 가져온다. */
-export async function fetchPostBlocks(pageId: string): Promise<NotionBlock[]> {
-    return fetchBlockChildren(pageId);
-}
+/** 글(페이지)의 본문 블록 전체를 가져온다. 블록 조회는 호출 수가 많아 결과를 캐시한다. */
+export const fetchPostBlocks = unstable_cache(
+    (pageId: string): Promise<NotionBlock[]> => fetchBlockChildren(pageId),
+    ["post-blocks"],
+    { revalidate: REVALIDATE_SECONDS, tags: [POSTS_CACHE_TAG] },
+);

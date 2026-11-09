@@ -13,9 +13,11 @@ const geistSans = Geist({
     subsets: ["latin"],
 });
 
+// 코드 블록에서만 쓰므로 첫 화면 로딩을 막지 않게 미리 불러오지 않는다
 const geistMono = Geist_Mono({
     variable: "--font-geist-mono",
     subsets: ["latin"],
+    preload: false,
 });
 
 export const metadata: Metadata = {
