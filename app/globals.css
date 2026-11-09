@@ -128,3 +128,13 @@
     @apply font-sans;
   }
 }
+
+/* shiki 코드 블록: 라이트/다크 색을 CSS 변수로 전환한다 (components/code-block.tsx) */
+.shiki-block .shiki,
+.shiki-block .shiki span {
+  color: var(--shiki-light);
+}
+.dark .shiki-block .shiki,
+.dark .shiki-block .shiki span {
+  color: var(--shiki-dark);
+}

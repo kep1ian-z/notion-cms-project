@@ -5,11 +5,12 @@ import { notFound, redirect } from "next/navigation";
 
 import { CategoryBadge } from "@/components/category-badge";
 import { NotionBlocks } from "@/components/notion-blocks";
+import { TableOfContents } from "@/components/table-of-contents";
 import { TagList } from "@/components/tag-list";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { fetchPostBlocks, fetchPostBySlug } from "@/lib/notion";
-import { decodeParam, formatDate } from "@/lib/post-utils";
+import { decodeParam, formatDate, getHeadings } from "@/lib/post-utils";
 
 // 브라우저 탭/공유 시 글 제목을 쓰기 위한 메타데이터 (fetchPublishedPosts는 요청 내 캐시됨)
 export async function generateMetadata({
@@ -38,6 +39,7 @@ export default async function PostPage({
     }
 
     const blocks = await fetchPostBlocks(post.id);
+    const headings = getHeadings(blocks);
 
     return (
         <article className="mx-auto flex max-w-3xl flex-col gap-6 px-4 py-12 sm:py-16">
@@ -69,6 +71,9 @@ export default async function PostPage({
             </header>
 
             <Separator />
+
+            {/* 제목이 2개 이상일 때만 목차가 의미 있다 */}
+            {headings.length >= 2 && <TableOfContents headings={headings} />}
 
             <div className="text-base leading-8">
                 {blocks.length > 0 ? (

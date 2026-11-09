@@ -1,5 +1,5 @@
 // 글 데이터를 가공하는 순수 유틸 함수 모음 (날짜 포맷, slug 생성, 필터링)
-import type { Category, Post, Tag } from "./types";
+import type { Category, NotionBlock, Post, PostHeading, Tag } from "./types";
 
 /** ISO 날짜 문자열을 "2026년 9월 21일" 형태로 변환한다. 서버/클라이언트 결과가 같도록 UTC 기준으로 계산한다. */
 export function formatDate(isoDate: string): string {
@@ -62,6 +62,53 @@ export function getCategories(posts: Post[]): Category[] {
 /** 글 목록에서 중복 없는 태그 목록을 가나다/알파벳 순으로 반환한다. */
 export function getTags(posts: Post[]): Tag[] {
     return [...new Set(posts.flatMap((post) => post.tags))].sort();
+}
+
+// 목록 한 페이지에 보여줄 글 수 (3열 그리드 기준 3줄)
+export const POSTS_PER_PAGE = 9;
+
+/** ?page= 값을 1 이상의 정수로 바꾼다. 비정상 값이면 1을 반환한다. */
+export function parsePage(value: string | string[] | undefined): number {
+    const page = Number(typeof value === "string" ? value : "");
+    return Number.isInteger(page) && page >= 1 ? page : 1;
+}
+
+/** 목록을 페이지 단위로 자른다. 범위를 벗어난 페이지는 마지막 페이지로 보정한다. */
+export function paginate<T>(
+    items: T[],
+    page: number,
+    perPage: number = POSTS_PER_PAGE,
+): { items: T[]; currentPage: number; totalPages: number } {
+    const totalPages = Math.max(1, Math.ceil(items.length / perPage));
+    const currentPage = Math.min(page, totalPages);
+    const start = (currentPage - 1) * perPage;
+    return { items: items.slice(start, start + perPage), currentPage, totalPages };
+}
+
+/** 본문 블록에서 목차에 쓸 제목(heading_1~3)을 순서대로 뽑는다. 비어 있는 제목은 제외한다. */
+export function getHeadings(blocks: NotionBlock[]): PostHeading[] {
+    const headings: PostHeading[] = [];
+    for (const block of blocks) {
+        const richText =
+            block.type === "heading_1"
+                ? block.heading_1.rich_text
+                : block.type === "heading_2"
+                  ? block.heading_2.rich_text
+                  : block.type === "heading_3"
+                    ? block.heading_3.rich_text
+                    : null;
+        if (!richText) continue;
+
+        const text = richText.map((item) => item.plain_text).join("").trim();
+        if (text) {
+            headings.push({
+                id: block.id,
+                text,
+                level: Number(block.type.slice(-1)) as 1 | 2 | 3,
+            });
+        }
+    }
+    return headings;
 }
 
 /** URL 파라미터를 디코딩한다. 잘못된 인코딩이면 원본을 그대로 반환한다. */

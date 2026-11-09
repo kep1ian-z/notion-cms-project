@@ -2,9 +2,15 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { CategoryFilter } from "@/components/category-filter";
+import { Pagination } from "@/components/pagination";
 import { PostList } from "@/components/post-list";
 import { fetchPostsByCategory, fetchPublishedPosts } from "@/lib/notion";
-import { decodeParam, getCategories } from "@/lib/post-utils";
+import {
+    decodeParam,
+    getCategories,
+    paginate,
+    parsePage,
+} from "@/lib/post-utils";
 
 // URL의 카테고리를 Notion에 실제 있는 카테고리명으로 맞춘다 (대소문자 무시). 없으면 undefined
 async function resolveCategory(rawCategory: string) {
@@ -26,6 +32,7 @@ export async function generateMetadata({
 // 카테고리 페이지: Notion에서 해당 카테고리의 발행된 글만 서버사이드로 조회한다
 export default async function CategoryPage({
     params,
+    searchParams,
 }: PageProps<"/category/[category]">) {
     const { categories, category } = await resolveCategory(
         (await params).category,
@@ -34,7 +41,12 @@ export default async function CategoryPage({
         notFound();
     }
 
-    const posts = await fetchPostsByCategory(category);
+    const categoryPosts = await fetchPostsByCategory(category);
+    const {
+        items: posts,
+        currentPage,
+        totalPages,
+    } = paginate(categoryPosts, parsePage((await searchParams).page));
 
     return (
         <div className="mx-auto flex max-w-5xl flex-col gap-8 px-4 py-12 sm:py-16">
@@ -43,12 +55,17 @@ export default async function CategoryPage({
                 <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
                     {category}
                 </h1>
-                <p className="text-muted-foreground">글 {posts.length}개</p>
+                <p className="text-muted-foreground">글 {categoryPosts.length}개</p>
             </section>
 
             <CategoryFilter categories={categories} activeCategory={category} />
 
             <PostList posts={posts} />
+            <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                basePath={`/category/${encodeURIComponent(category)}`}
+            />
         </div>
     );
 }

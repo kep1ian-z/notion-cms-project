@@ -1,6 +1,7 @@
 import type { RichTextItemResponse } from "@notionhq/client";
 import type { ReactNode } from "react";
 
+import { CodeBlock } from "@/components/code-block";
 import type { NotionBlock } from "@/lib/types";
 
 // Notion 서식(굵게/기울임/코드/링크 등)이 적용된 텍스트를 렌더링한다
@@ -72,19 +73,25 @@ function Block({ block }: { block: NotionBlock }) {
         // 페이지 제목이 h1이므로 본문 제목은 h2부터 시작한다
         case "heading_1":
             return (
-                <h2 className="mt-8 text-2xl font-bold tracking-tight">
+                <h2
+                    id={block.id}
+                    className="mt-8 scroll-mt-20 text-2xl font-bold tracking-tight"
+                >
                     <RichText items={block.heading_1.rich_text} />
                 </h2>
             );
         case "heading_2":
             return (
-                <h3 className="mt-6 text-xl font-semibold tracking-tight">
+                <h3
+                    id={block.id}
+                    className="mt-6 scroll-mt-20 text-xl font-semibold tracking-tight"
+                >
                     <RichText items={block.heading_2.rich_text} />
                 </h3>
             );
         case "heading_3":
             return (
-                <h4 className="mt-4 text-lg font-semibold">
+                <h4 id={block.id} className="mt-4 scroll-mt-20 text-lg font-semibold">
                     <RichText items={block.heading_3.rich_text} />
                 </h4>
             );
@@ -109,18 +116,12 @@ function Block({ block }: { block: NotionBlock }) {
             );
         case "code":
             return (
-                <figure className="overflow-hidden rounded-lg border bg-muted/50">
-                    <div className="border-b px-4 py-1.5 font-mono text-xs text-muted-foreground">
-                        {block.code.language}
-                    </div>
-                    <pre className="overflow-x-auto p-4 text-sm leading-6">
-                        <code>
-                            {block.code.rich_text
-                                .map((text) => text.plain_text)
-                                .join("")}
-                        </code>
-                    </pre>
-                </figure>
+                <CodeBlock
+                    code={block.code.rich_text
+                        .map((text) => text.plain_text)
+                        .join("")}
+                    language={block.code.language}
+                />
             );
         case "to_do":
             return (

@@ -1,18 +1,29 @@
 import Link from "next/link";
 
 import { CategoryFilter } from "@/components/category-filter";
+import { Pagination } from "@/components/pagination";
 import { PostList } from "@/components/post-list";
 import { SearchBar } from "@/components/search-bar";
 import { fetchPublishedPosts } from "@/lib/notion";
-import { getCategories, searchPosts } from "@/lib/post-utils";
+import {
+    getCategories,
+    paginate,
+    parsePage,
+    searchPosts,
+} from "@/lib/post-utils";
 
 // 홈: Notion에서 가져온 발행된 글 목록 (최신순)
 export default async function Home({ searchParams }: PageProps<"/">) {
-    const { q } = await searchParams;
+    const { q, page } = await searchParams;
     const keyword = typeof q === "string" ? q : "";
 
     const publishedPosts = await fetchPublishedPosts();
-    const posts = searchPosts(publishedPosts, keyword);
+    const matchedPosts = searchPosts(publishedPosts, keyword);
+    const {
+        items: posts,
+        currentPage,
+        totalPages,
+    } = paginate(matchedPosts, parsePage(page));
 
     return (
         <div className="mx-auto flex max-w-5xl flex-col gap-8 px-4 py-12 sm:py-16">
@@ -35,7 +46,7 @@ export default async function Home({ searchParams }: PageProps<"/">) {
                 <div className="flex items-center justify-between gap-4">
                     <h2 className="text-xl font-semibold">
                         {keyword
-                            ? `"${keyword}" 검색 결과 ${posts.length}개`
+                            ? `"${keyword}" 검색 결과 ${matchedPosts.length}개`
                             : "최근 글"}
                     </h2>
                     {keyword && (
@@ -54,6 +65,12 @@ export default async function Home({ searchParams }: PageProps<"/">) {
                             ? `"${keyword}"에 해당하는 글이 없습니다. 다른 제목이나 태그로 검색해 보세요.`
                             : "아직 발행된 글이 없습니다."
                     }
+                />
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    basePath="/"
+                    query={keyword ? { q: keyword } : {}}
                 />
             </section>
         </div>

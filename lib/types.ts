@@ -8,6 +8,14 @@ import type { BlockObjectResponse } from "@notionhq/client";
  */
 export type NotionBlock = BlockObjectResponse & { children?: NotionBlock[] };
 
+/** 목차에 표시할 본문 제목. id는 제목 블록 ID이며 앵커(#id)로 쓴다. */
+export interface PostHeading {
+    id: string;
+    text: string;
+    // Notion heading_1~3
+    level: 1 | 2 | 3;
+}
+
 /**
  * Status 속성(상태) 값.
  * Notion select 옵션: 초안 / 발행됨
