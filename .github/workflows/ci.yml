@@ -28,7 +28,7 @@ jobs:
 
       # 타입 검사는 next build에도 포함되지만, 실패 원인을 빨리 구분하려고 먼저 실행한다
       - name: Type check
-        run: npx tsc --noEmit
+        run: npx next typegen && npx tsc --noEmit
 
       # Notion 시크릿 없이도 빌드되도록 설계했다 (generateStaticParams가 조회 실패 시 빈 목록을 반환).
       # 실제 데이터 검증은 Vercel 배포와 스모크 테스트에서 한다
